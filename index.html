@@ -925,6 +925,18 @@
     </a>
   </aside>
 
+  <!-- ==================== FULLSCREEN PHOTO LIGHTBOX MODAL ==================== -->
+  <div class="lightbox-modal" id="photoLightbox" aria-hidden="true" role="dialog" aria-label="Photo Viewer">
+    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox-content">
+      <button class="lightbox-close-btn" id="lightboxCloseBtn" aria-label="Close full photo view">&times;</button>
+      <div class="lightbox-img-wrapper">
+        <img src="" alt="" id="lightboxImg" class="lightbox-img">
+      </div>
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>

@@ -857,7 +857,74 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 9. INITIALIZE
+  // 9. FULLSCREEN PHOTO LIGHTBOX VIEWER
+  // ==========================================
+  const photoLightbox = document.getElementById('photoLightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxCaption = document.getElementById('lightboxCaption');
+  const lightboxCloseBtn = document.getElementById('lightboxCloseBtn');
+  const lightboxBackdrop = document.getElementById('lightboxBackdrop');
+
+  function openLightbox(src, caption) {
+    if (!photoLightbox || !lightboxImg) return;
+    lightboxImg.src = src;
+    lightboxImg.alt = caption || "Rozario's Giardino Photo";
+    if (lightboxCaption) {
+      lightboxCaption.textContent = caption || "Rozario's Giardino - Cafe & Courtyard";
+      lightboxCaption.style.display = caption ? 'block' : 'none';
+    }
+    photoLightbox.classList.add('active');
+    photoLightbox.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    if (!photoLightbox) return;
+    photoLightbox.classList.remove('active');
+    photoLightbox.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  if (lightboxCloseBtn) lightboxCloseBtn.addEventListener('click', closeLightbox);
+  if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeLightbox);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && photoLightbox && photoLightbox.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+
+  // Attach click listeners to all photo containers on the website
+  const clickableImages = document.querySelectorAll('.hero-visual-3d-card, .experience-card-img-wrapper, .signature-img-box, .instagram-post-card, .stack-img, .mosaic-item');
+
+  clickableImages.forEach(wrapper => {
+    wrapper.addEventListener('click', (e) => {
+      // If clicking inside an action link or button inside the card, don't trigger lightbox
+      if (e.target.closest('a') && !e.target.closest('.instagram-post-card')) {
+        return;
+      }
+      
+      if (wrapper.classList.contains('instagram-post-card')) {
+        e.preventDefault();
+      }
+
+      const img = wrapper.tagName === 'IMG' ? wrapper : wrapper.querySelector('img');
+      if (img && img.src) {
+        let caption = img.alt || '';
+        const cardCaption = wrapper.querySelector('.insta-caption') || 
+                            wrapper.querySelector('.experience-title') || 
+                            wrapper.querySelector('.dish-title') || 
+                            wrapper.querySelector('.mosaic-caption');
+        if (cardCaption && cardCaption.textContent) {
+          caption = cardCaption.textContent.trim();
+        }
+        openLightbox(img.src, caption);
+      }
+    });
+  });
+
+  // ==========================================
+  // 10. INITIALIZE
   // ==========================================
   initRoutingFromHash();
   renderMenuItems();
